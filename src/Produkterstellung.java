@@ -1,32 +1,26 @@
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
-
-import java.util.Scanner;
 
 public class Produkterstellung {
 
     public static void main(String[] args) throws IOException {
 
-        Scanner input = new Scanner(System.in);
+        String name = "";
 
-        System.out.print("Produktname: ");
+        String art = "";
 
-        String name = input.nextLine();
-        JSONArray produktliste = new JSONArray();
-        System.out.print("Produktart: ");
-
-        String art = input.nextLine();
+        Vorrat v = new Vorrat();
 
         JSONObject produkt = new JSONObject();
-        produkt.put("name", name);
-        produkt.put("art", art);
 
-        JSONArray produtkliste = new JSONArray();
-        produtkliste.add(produkt);
+        v.produktErstellen(name, art, produkt);
 
-        System.out.print(produkt.get("name"));
+        JSONArray produktliste = new JSONArray();
+        produktliste.add(produkt);
 
         File f = new File("Vorratsliste.json");
         if (f.exists()) {
@@ -44,5 +38,41 @@ public class Produkterstellung {
             fw.close();
 
         }
+
+        BufferedReader br = null;
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject;
+
+        try {
+
+            String s;
+
+            br = new BufferedReader(new FileReader("Vorratsliste.json"));
+
+            while ((s = br.readLine()) != null) {
+
+                Object obj;
+
+                try {
+                    obj = parser.parse(s);
+                    jsonObject = (JSONObject) obj;
+                    produktliste.add(jsonObject);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            } catch(IOException e){
+                e.printStackTrace();
+            } finally{
+                try {
+                    if (br != null) br.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                System.out.print(produktliste.size());
+            }
+        }
     }
-}
