@@ -1,26 +1,24 @@
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.*;
+import java.util.ArrayList;
 
 public class Produkterstellung {
 
     public static void main(String[] args) throws IOException {
 
         String name = "";
-
         String art = "";
-
         Vorrat v = new Vorrat();
+
+        ArrayList<Vorrat1> vorratsliste = new ArrayList<>();
 
         JSONObject produkt = new JSONObject();
 
-        v.produktErstellen(name, art, produkt);
+        v.jsonProduktErstellen(name, art, produkt);
 
-        JSONArray produktliste = new JSONArray();
-        produktliste.add(produkt);
 
         File f = new File("Vorratsliste.json");
         if (f.exists()) {
@@ -41,7 +39,6 @@ public class Produkterstellung {
 
         BufferedReader br = null;
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject;
 
         try {
 
@@ -51,16 +48,24 @@ public class Produkterstellung {
 
             while ((s = br.readLine()) != null) {
 
-                Object obj;
 
                 try {
-                    obj = parser.parse(s);
-                    jsonObject = (JSONObject) obj;
-                    produktliste.add(jsonObject);
-
+                    produkt = (JSONObject) parser.parse(s);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
+
+                String name1 = (String) produkt.get("name");
+                String art1 = (String) produkt.get("art");
+
+                Vorrat1 produkt1 = new Vorrat1();
+                produkt1.name = name1;
+                produkt1.art = art1;
+                vorratsliste.add(produkt1);
+
+
+
             }
 
             } catch(IOException e){
@@ -72,7 +77,10 @@ public class Produkterstellung {
                     ex.printStackTrace();
                 }
 
-                System.out.print(produktliste.size());
             }
+
+            System.out.print(vorratsliste);
+
+
         }
     }

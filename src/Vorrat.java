@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Vorrat {
 
-    public JSONObject produktErstellen(String name, String art, JSONObject produkt) {
+    public JSONObject jsonProduktErstellen(String name, String art, JSONObject produkt) {
 
         Scanner input = new Scanner(System.in);
 
